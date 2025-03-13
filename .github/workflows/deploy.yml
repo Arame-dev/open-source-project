@@ -3,18 +3,24 @@ name: Build-Push workflow
 on: push
 
 jobs:
-    build-push:
+    build-scaning-pushing:
       runs-on: ubuntu-latest
 
       steps:
         - name: Checkout repository
           uses: actions/checkout@v3
 
-        - name: Build Docker images
+        - name: Build docker-client
           run: |
-            docker build -f clent/Dockerfile.dev -t client clientserver.azurecr.io/client:latest client
-            docker build -f nginx/Dockerfile.dev -t nginx clientserver.azurecr.io/nginx:latest nginx
-            docker build -f server/Dockerfile.dev -t server clientserver.azurecr.io/server:latest server
+            docker build -f client/Dockerfile.dev -t client clientserver.azurecr.io/client:latest ./client
+
+        - name: Build docker-nginx
+          run: |
+            docker build -f nginx/Dockerfile.dev -t nginx clientserver.azurecr.io/nginx:latest ./nginx
+
+        - name: Build docker-server
+          run: |
+            docker build -f server/Dockerfile.dev -t server clientserver.azurecr.io/server:latest ./server
         
         - name: Run Trivy vulnerability scanner1
           uses: aquasecurity/trivy-action@0.28.0
