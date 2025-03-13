@@ -5,6 +5,9 @@ on: push
 jobs:
     build-scaning-pushing:
       runs-on: ubuntu-latest
+      permissions:
+        id-token: write
+        contents: read
 
       steps:
         - name: Checkout repository
@@ -25,7 +28,7 @@ jobs:
         - name: Run Trivy vulnerability scanner1
           uses: aquasecurity/trivy-action@0.28.0
           with:
-              image-ref: 'client:latest'
+              image-ref: image-client:latest
               format: 'table'
               exit-code: '1'
               ignore-unfixed: true
@@ -34,7 +37,7 @@ jobs:
         - name: Run Trivy vulnerability scanner2
           uses: aquasecurity/trivy-action@0.28.0
           with:
-              image-ref: 'nginx:latest'
+              image-ref: image-nginx:latest
               format: 'table'
               exit-code: '1'
               ignore-unfixed: true
@@ -43,7 +46,7 @@ jobs:
         - name: Run Trivy vulnerability scanner3
           uses: aquasecurity/trivy-action@0.28.0
           with:
-              image-ref: 'server:latest'
+              image-ref: image-server:latest
               format: 'table'
               exit-code: '1'
               ignore-unfixed: true
@@ -62,6 +65,15 @@ jobs:
 
         - name:  Push in Azure Container Registry
           run: |
-            docker push clientserver.azurecr.io/client:latest 
-            docker push clientserver.azurecr.io/nginx:latest
-            docker push clientserver.azurecr.io/server:latest
+            docker tag  image-client:latest clientserver.azurecr.io/client:latest
+            docker push image-client/client:latest 
+
+        - name: Push docker-nginx
+          run: |
+            docker tag  image-nginx:latest clientserver.azurecr.io/nginx:latest
+            docker push image-nginx/nginx:latest
+
+        - name: Push docker-server
+          run: |
+            docker tag  image-server:latest clientserver.azurecr.io/server:latest
+            docker push image-server/server:latest
