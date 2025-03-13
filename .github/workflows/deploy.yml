@@ -1,0 +1,61 @@
+name: Build-Push workflow
+
+on: push
+
+jobs:
+    build-push:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Build Docker images
+          run: |
+            docker build -f clent/Dockerfile.dev -t client clientserver.azurecr.io/client:latest client
+            docker build -f nginx/Dockerfile.dev -t nginx clientserver.azurecr.io/nginx:latest nginx
+            docker build -f server/Dockerfile.dev -t server clientserver.azurecr.io/server:latest server
+        
+        - name: Run Trivy vulnerability scanner1
+          uses: aquasecurity/trivy-action@0.28.0
+          with:
+              image-ref: 'client:latest'
+              format: 'table'
+              exit-code: '1'
+              ignore-unfixed: true
+          continue-on-error: true
+
+        - name: Run Trivy vulnerability scanner2
+          uses: aquasecurity/trivy-action@0.28.0
+          with:
+              image-ref: 'nginx:latest'
+              format: 'table'
+              exit-code: '1'
+              ignore-unfixed: true
+          continue-on-error: true
+        
+        - name: Run Trivy vulnerability scanner3
+          uses: aquasecurity/trivy-action@0.28.0
+          with:
+              image-ref: 'server:latest'
+              format: 'table'
+              exit-code: '1'
+              ignore-unfixed: true
+          continue-on-error: true
+
+        - name: login azure
+          uses: azure/login@v2
+          with:
+              client-id: ${{ secrets.AZURE_CLIENT_ID }}
+              tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+              subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+        - name: Log in to Azure Container Registry
+          run: |
+            az acr login --name clientserver
+
+        - name:  Push in Azure Container Registry
+          run: |
+            docker push clientserver.azurecr.io/client:latest 
+            docker push clientserver.azurecr.io/nginx:latest
+            docker push clientserver.azurecr.io/server:latest
