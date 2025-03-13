@@ -12,15 +12,15 @@ jobs:
 
         - name: Build docker-client
           run: |
-            docker build -f client/Dockerfile.dev -t client clientserver.azurecr.io/client:latest ./client
+            docker build -f client/Dockerfile.dev -t image-client:latest ./client
 
         - name: Build docker-nginx
           run: |
-            docker build -f nginx/Dockerfile.dev -t nginx clientserver.azurecr.io/nginx:latest ./nginx
+            docker build -f nginx/Dockerfile.dev -t image-nginx:latest ./nginx
 
         - name: Build docker-server
           run: |
-            docker build -f server/Dockerfile.dev -t server clientserver.azurecr.io/server:latest ./server
+            docker build -f server/Dockerfile.dev -t image-server:latest ./server
         
         - name: Run Trivy vulnerability scanner1
           uses: aquasecurity/trivy-action@0.28.0
