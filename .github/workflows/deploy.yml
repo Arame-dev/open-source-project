@@ -2,9 +2,6 @@ name: Build-Push workflow
 
 on: push
 
-permissions:
-  id-token: write
-  contents: read
 jobs:
     build-scaning-pushing:
       runs-on: ubuntu-latest
@@ -52,12 +49,13 @@ jobs:
               ignore-unfixed: true
           continue-on-error: true
 
-        - name: login azure
+        - name: Login azure
           uses: azure/login@v2
           with:
               client-id: ${{ secrets.AZURE_CLIENT_ID }}
               tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-              subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+              allow-no-subscriptions: true
+              enable-AzPSSession: true
         
         - name: Log in to ACR
           run: |
