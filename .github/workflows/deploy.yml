@@ -19,20 +19,20 @@ jobs:
 
         - name: Build docker-client
           run: |
-            docker build -f client/Dockerfile.dev -t image-client:latest ./client
+            docker build -f client/Dockerfile.dev -t clientserver.azurecr.io/client:latest ./client
 
         - name: Build docker-nginx
           run: |
-            docker build -f nginx/Dockerfile.dev -t image-nginx:latest ./nginx
+            docker build -f nginx/Dockerfile.dev -t clientserver.azurecr.io/nginx:latest ./nginx
 
         - name: Build docker-server
           run: |
-            docker build -f server/Dockerfile.dev -t image-server:latest ./server
+            docker build -f server/Dockerfile.dev -t clientserver.azurecr.io/server:latest ./server
         
         - name: Run Trivy vulnerability scanner1
           uses: aquasecurity/trivy-action@0.28.0
           with:
-              image-ref: image-client:latest
+              image-ref: clientserver.azurecr.io/client:latest
               format: 'table'
               exit-code: '1'
               ignore-unfixed: true
@@ -41,7 +41,7 @@ jobs:
         - name: Run Trivy vulnerability scanner2
           uses: aquasecurity/trivy-action@0.28.0
           with:
-              image-ref: image-nginx:latest
+              image-ref: clientserver.azurecr.io/nginx:latest
               format: 'table'
               exit-code: '1'
               ignore-unfixed: true
@@ -50,7 +50,7 @@ jobs:
         - name: Run Trivy vulnerability scanner3
           uses: aquasecurity/trivy-action@0.28.0
           with:
-              image-ref: image-server:latest
+              image-ref: clientserver.azurecr.io/server:latest
               format: 'table'
               exit-code: '1'
               ignore-unfixed: true
@@ -72,15 +72,12 @@ jobs:
 
         - name:  Push in Azure Container Registry
           run: |
-            docker tag  image-client:latest clientserver.azurecr.io/client:latest
-            docker push image-client/client:latest 
+            docker push clientserver.azurecr.io/client:latest 
 
         - name: Push docker-nginx
           run: |
-            docker tag  image-nginx:latest clientserver.azurecr.io/nginx:latest
-            docker push image-nginx/nginx:latest
+            docker push clientserver.azurecr.io/nginx:latest
 
         - name: Push docker-server
           run: |
-            docker tag  image-server:latest clientserver.azurecr.io/server:latest
-            docker push image-server/server:latest
+            docker push clientserver.azurecr.io/server:latest
