@@ -2,12 +2,12 @@ name: Build-Push workflow
 
 on: push
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
     build-scaning-pushing:
       runs-on: ubuntu-latest
-      permissions:
-        id-token: write
-        contents: read
 
       steps:
         - name: Checkout repository
