@@ -61,6 +61,9 @@ jobs:
               allow-no-subscriptions: true
               enable-AzPSSession: true
         
+        - name: Set active subscription
+          run: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
         - name: Log in to ACR
           run: |
             az acr login --name clientserver
