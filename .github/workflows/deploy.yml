@@ -67,9 +67,11 @@ jobs:
         - name: Set active subscription
           run: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-        - name: Log in to ACR
-          run: |
-            az acr login --name clientserver
+        - uses: azure/docker-login@v2
+          with:
+            login-server: clientserver.azurecr.io
+            username: ${{ secrets.ACR_USERNAME }}
+            password: ${{ secrets.ACR_PASSWORD }}
 
         - name:  Push in Azure Container Registry
           run: |
