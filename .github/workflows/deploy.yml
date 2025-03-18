@@ -86,8 +86,8 @@ jobs:
         - name: Copy compose file to VM
           uses: appleboy/scp-action@v0.1.7
           with:
-            host: ${{ secrets.VM_IP }} #4.180.241.77
-            username: ${{ secrets.VM_USERNAME }} #
+            host: ${{ secrets.VM_IP }}
+            username: ${{ secrets.VM_USERNAME }}
             key: ${{ secrets.VM_SSH_KEY }} 
             port: 22
             source: docker-compose.yml
