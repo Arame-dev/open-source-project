@@ -4,9 +4,6 @@ services:
   server:
     image: clientserver.azurecr.io/server:latest
     restart: always
-    # build:
-    #   context: ./server
-    #   dockerfile: Dockerfile.dev
     container_name: bookstore_server
     volumes:
       - /app/node_modules
