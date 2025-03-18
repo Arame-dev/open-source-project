@@ -2,10 +2,11 @@ version: '3.9'
 
 services:
   server:
+    image: clientserver.azurecr.io/server:latest
     restart: always
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
+    # build:
+    #   context: ./server
+    #   dockerfile: Dockerfile.dev
     container_name: bookstore_server
     volumes:
       - /app/node_modules
@@ -32,10 +33,11 @@ services:
       - bookstore_network
 
   client:
+    image: clientserver.azurecr.io/client:latest
     restart: always
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
+    # build:
+    #   context: ./client
+    #   dockerfile: Dockerfile.dev
     container_name: bookstore_client
     volumes:
       - /app/node_modules
@@ -46,13 +48,14 @@ services:
       - bookstore_network
 
   nginx:
+    image: clientserver.azurecr.io/nginx:latest
     restart: always
     depends_on:
       - server
       - client
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.dev
+    # build:
+    #   context: ./nginx
+    #   dockerfile: Dockerfile.dev
     container_name: bookstore_nginx
     ports:
       - 8080:80
