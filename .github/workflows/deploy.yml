@@ -71,7 +71,7 @@ jobs:
             username: ${{ secrets.ACR_USERNAME }}
             password: ${{ secrets.ACR_PASSWORD }}
 
-        - name:  Push in Azure Container Registry
+        - name:  Push docker-clinet
           run: |
             docker push clientserver.azurecr.io/client:latest 
 
