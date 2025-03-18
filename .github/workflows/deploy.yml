@@ -103,6 +103,6 @@ jobs:
             script: |
               cd /home/adminuser/app
               docker login clientserver.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
-              docker-compose down
-              docker-compose pull
-              docker-compose up -d
+              docker compose down
+              docker compose pull
+              docker compose up -d
