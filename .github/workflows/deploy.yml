@@ -91,7 +91,7 @@ jobs:
             key: ${{ secrets.VM_SSH_KEY }} 
             port: 22
             source: docker-compose.yml
-            target: /home/user/app/
+            target: /home/adminuser/app/
 
         - name: Deploy on VM
           uses: appleboy/ssh-action@v1.0.0
@@ -101,8 +101,8 @@ jobs:
             key: ${{ secrets.VM_SSH_KEY }}
             port: 22
             script: |
-              cd /home/azureuser/app
-              docker login clientserver.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}  # Авторизация в ACR
+              cd /home/adminuser/app
+              docker login clientserver.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
               docker-compose down
               docker-compose pull
               docker-compose up -d
